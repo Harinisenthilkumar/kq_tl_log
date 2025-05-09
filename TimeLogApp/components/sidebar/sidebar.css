@@ -1,0 +1,29 @@
+.main-div {
+    margin: 0;
+    padding: 0;
+    width: 100%
+}
+
+.sidebar {
+    width: 15%;
+    height: 100vh;
+    background: #3F2768 0% 0% no-repeat padding-box;
+    text-align: center;
+}
+
+.time-log,
+.create-team,
+.logout {
+    width: 100%;
+    height: 80px;
+    align-content: center;
+    font: normal normal normal 18px/26px Source Sans Pro;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    opacity: 1;
+    cursor: pointer;
+}
+
+.menu-items:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
