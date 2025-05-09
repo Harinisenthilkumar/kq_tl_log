@@ -1,0 +1,74 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+{% load component_tags %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<!-- Use ONLY modern theme -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-quartz.css">
+{{ component_media }}
+{% endblock %}
+
+{% block content %}
+<section class="form-main-container" style="display: flex; width: 100%;">
+    {% component 'sidebar' %}{% endcomponent %}
+    <div class="forms-container user" style="width: 100%;">
+        <div class="forms-container" style="width: 96%; margin: 0 10px; padding: 20px; height: 94vh;
+            background: #FFFFFF; box-shadow: 10px 20px 30px #3F27684D;
+            border: 1px solid #D4CDE1; border-radius: 30px;">
+            <div id="myGrid" class="ag-theme-quartz" style="height: 90vh; width: 100%;"></div>
+        </div> 
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+<!-- Only include ONCE -->
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const columnDefs = [
+            { field: 'userName' },
+            { field: 'email' },
+            { field: 'mobileNumber' },
+            { field: 'team' },
+            { field: 'teamLead' },
+            { field: 'isActive' },
+            { field: 'isActiveRemarks' },
+            { field: 'isAccountLocked' },
+            { field: 'isAccountLockedRemarks' },
+            { field: 'createdBy' }
+        ];
+    
+        const gridOptions = {
+            columnDefs,
+            defaultColDef: {
+                sortable: true,
+                filter: false,
+                resizable: true,
+                suppressMovable: true   
+            },
+            rowHeight: 70,// 👈 Set desired row height in pixels
+            pagination: true,
+            paginationPageSize: 10,
+            onGridReady: function (params) {
+                fetch('/api/users/')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data); // Debug
+                        params.api.applyTransaction({ add: data }); // ✅ This is the key line
+                    })
+                    .catch(error => {
+                        console.error('Failed to load data:', error);
+                    });
+            }
+        };
+    
+        const gridDiv = document.getElementById('myGrid');
+        agGrid.createGrid(gridDiv, gridOptions);
+    });
+    
+    
+</script>
+{% endblock %}
