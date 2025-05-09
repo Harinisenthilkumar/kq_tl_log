@@ -1,0 +1,96 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <title>Login</title>
+  <style>
+    .error-message {
+      color: red;
+      font-size: 0.8em;
+      margin-top: 5px;
+    }
+    .toggle-password-icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+    }
+    .messages {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 10px;
+      color: red;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+    <div class="background-wrapper">
+      <div class="main-login-box">
+        <div class="login-form-side">
+          <h2>Login to your account</h2>
+          <form method="POST" class="login-form" id="loginForm" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="text" id="email" name="username" required>
+              <p class="error-message" id="emailError"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div style="position: relative;">
+                <input type="password" id="password" name="password" required>
+                <img src="{% static 'accounts/images/eye-close.svg' %}" alt="Toggle Password" id="togglePassword" class="toggle-password-icon" style="cursor: pointer;">
+              </div>
+              <a href="#" class="forgot-password">Forgot Password?</a>
+              <p class="error-message" id="passwordError"></p>
+            </div>
+
+            <button type="submit" class="login-btn" id="submitLogin">
+              Login
+              <img src="{% static 'accounts/images/Group 26197.svg' %}" alt="Arrow Icon">
+            </button>
+
+            {% if messages %}
+              <ul class="messages">
+                {% for message in messages %}
+                  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </form>
+        </div>
+
+        <div class="login-overlay-side">
+          <img src="{% static '/Assessment logo.png' %}" alt="Assessment Logo" class="logo-image">
+          <img src="{% static '/Rectangle 14.png' %}" alt="Rectangle" class="rectangle-img">
+        </div>
+      </div>
+    </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordInput = document.getElementById('password');
+      const togglePasswordIcon = document.getElementById('togglePassword');
+      const eyeOpenSrc = "{% static '/images/eye.svg' %}";
+      const eyeCloseSrc = "{% static '/images/eye-close.svg' %}";
+
+      togglePasswordIcon.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.src = type === 'password' ? eyeCloseSrc : eyeOpenSrc;
+      });
+    });
+  </script>
+  </body>
+
+</html>
