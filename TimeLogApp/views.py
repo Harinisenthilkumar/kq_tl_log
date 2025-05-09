@@ -1,10 +1,24 @@
 from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import json
 from .models import UserProfile, Team
 # Create your views here.
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        request.session['username'] = username
+        return redirect('dashboard') 
+    return render(request, 'login.html')
+
+
+def dashboard(request):
+    username = request.session.get('username', 'Guest')
+    return render(request, 'dashboard.html', {'username': username})
+
 def home(request):
     return render(request,'form.html')
 def grid_view(request):

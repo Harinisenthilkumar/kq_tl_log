@@ -57,7 +57,7 @@ ROOT_URLCONF = 'TimeLog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'TimeLogApp' / 'Templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,16 +82,16 @@ DATABASES = {
     }
 
 }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Tech_time_log',
-        'USER': 'root',
-        'PASSWORD': '123Asd!@#',
-        'HOST': 'localhost',
-        'PORT': '3306',  # Default MySQL port
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'Tech_time_log',
+#         'USER': 'root',
+#         'PASSWORD': '123Asd!@#',
+#         'HOST': 'localhost',
+#         'PORT': '3306',  # Default MySQL port
+#     }
+# }
 
 
 # Password validation
@@ -131,9 +131,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
    os.path.join(BASE_DIR,"TimeLogApp/components"),
+   
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
