@@ -1,0 +1,185 @@
+{% extends "layouts/main.html" %}
+{% load static %}
+{% load component_tags %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+{{ component_media }}
+{% endblock %}
+{% block content %}
+<body data-user-id="{{ user_id }}">
+<section class="form-main-container" style="display: flex; width: 100%;">
+    {% component 'sidebar' %}{% endcomponent %}
+    <div class="form-container user">
+        <div class="forms-container" style="width: 97%; margin: 0 10px; padding: 20px;
+            height: 94vh; background: #fff; box-shadow: 10px 20px 30px #3F27684D;
+            border: 1px solid #D4CDE1; border-radius: 30px;">
+            
+            <div class="alertMessage" style="display:none;">
+                <h4 class="messageHeader"></h4>
+                <p class="messageBody"></p>
+            </div>
+
+            <div style="width:1000px; margin: 10px 20px;">
+                <h2>Update User</h2>
+                <form id="update-user-form" style="width: 100%;">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" id="user-id">
+
+                    <div class="grid-container">
+                        <div class="form-group">
+                            <label for="username">User Name*</label>
+                            <input type="text" id="username" name="username" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email ID*</label>
+                            <input type="email" id="email" name="email" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number*</label>
+                            <input type="text" id="mobile" name="mobile" maxlength="10" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="employee_id">Employee ID*</label>
+                            <input type="text" id="employee_id" name="employee_id" required />
+                        </div>
+                        <div class="form-group"
+                            <label for="team">Team</label>
+                            <select id="team" name="team" required>
+                                <option value="">Select</option>
+                                <option>React-1</option>
+                                <option>React-2</option>
+                                <option>React-3</option>
+                                <option>Artificial Intelligence</option>
+                                <option>Embedded</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="team_lead">Team Lead</label>
+                            <select id="team_lead" name="team_lead" required>
+                                <option value="">Select</option>
+                                <option>Ramesh</option>
+                                <option>Naveen</option>
+                                <option>Keshavan</option>
+                                <option>Thamarai</option>
+                                <option>Guru</option>
+                            </select>
+                        </div>
+                        <div class="form-group radio-group">
+                            <label>Is Active*</label>
+                            <div>
+                                <input type="radio" name="is_active" value="Yes" id="is_active_yes"> Yes
+                                <input type="radio" name="is_active" value="No" id="is_active_no"> No
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks">Remarks*</label>
+                            <input type="text" id="remarks" name="remarks" />
+                        </div>
+                        <div class="form-group radio-group">
+                            <label>Is Account Locked*</label>
+                            <div>
+                                <input type="radio" name="is_locked" value="Yes" id="is_locked_yes"> Yes
+                                <input type="radio" name="is_locked" value="No" id="is_locked_no"> No
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks_locked">Remarks</label>
+                            <input type="text" id="remarks_locked" name="remarks_locked" />
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="cancel-btn" onclick="window.location.href='/grid'">Cancel</button>
+                        <button type="submit" class="save-btn">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+<script>
+    async function initializeUpdateUserPage() {
+        console.log("Initializing update user page...");
+        const form = document.getElementById("update-user-form");
+        const userId = document.body.dataset.userId;
+        console.log(userId)
+        if (!userId) {
+            alert("User ID is missing!");
+            return;
+        }
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const alertBox = document.querySelector('.alertMessage');
+        const messageBody = document.querySelector('.messageBody');
+        const messageHeader = document.querySelector('.messageHeader');
+    
+        try {
+            const response = await fetch(`/api/users/${userId}/`);
+            if (!response.ok) throw new Error('Failed to fetch user data');
+    
+            const user = await response.json();
+    
+            // Populate fields
+            document.getElementById("user-id").value = user.teamMemberId;
+            document.getElementById("username").value = user.userName;
+            document.getElementById("email").value = user.email;
+            document.getElementById("mobile").value = user.mobileNumber;
+            document.getElementById("employee_id").value = user.employeeId;
+            document.getElementById("team").value = user.team;
+            document.getElementById("team_lead").value = user.teamLead;
+            document.getElementById("remarks").value = user.isActiveRemarks;
+            document.getElementById("remarks_locked").value = user.isAccountLockedRemarks;
+    
+            // Set radio buttons
+            document.getElementById("is_active_yes").checked = user.isActive === true;
+            document.getElementById("is_active_no").checked = user.isActive === false;
+            document.getElementById("is_locked_yes").checked = user.isAccountLocked === true;
+            document.getElementById("is_locked_no").checked = user.isAccountLocked === false;
+    
+            // Form submission
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const data = Object.fromEntries(new FormData(form));
+    
+                console.log("Submitting form with data:", data);
+    
+                const response = await fetch(`/users/update/${userId}/`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrfToken
+                    },
+                    body: JSON.stringify(data)
+                });
+    
+                const result = await response.json();
+                if (response.ok) {
+                    messageHeader.textContent = "Success!";
+                    messageBody.textContent = result.message;
+                    alertBox.style.backgroundColor = "#d0f0c0";
+                    alertBox.style.display = "block";
+                    setTimeout(() => window.location.href = "/grid", 1000);
+                } else {
+                    messageHeader.textContent = "Error!";
+                    messageBody.innerHTML = result.error || "Update failed.";
+                    alertBox.style.backgroundColor = "#f8d7da";
+                    alertBox.style.display = "block";
+                }
+            });
+        } catch (error) {
+            console.error("Error:", error);
+            messageHeader.textContent = "Error!";
+            messageBody.textContent = "Could not load user data.";
+            alertBox.style.backgroundColor = "#f8d7da";
+            alertBox.style.display = "block";
+        }
+    }
+    
+    // Call the function when DOM is ready
+    document.addEventListener("DOMContentLoaded", initializeUpdateUserPage);
+</script>
+    
+    
+{% endblock %}

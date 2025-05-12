@@ -1,0 +1,11 @@
+<div class="logout-popup">
+    <form method="POST"  class="pop-up-container">
+        {% csrf_token %}
+        <h2>Are You sure </h2>
+        <p>you want to logout</p>
+        <div class="button-grop" style="display:flex;margin-top:30px;">
+            <p class="cancel-btn" onclick="document.querySelector('.logout-popup').style.display = 'none';">stay</p>
+            <button type="submit" class="save-btn delete-actions" style="margin-left:10px;">Logout</button>
+        </div>
+    </form>
+</div>
