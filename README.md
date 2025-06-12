@@ -1,4 +1,4 @@
-# 🕒 Time Log - Team Lead Activity Tracker (KQ TL Log)
+ 🕒 Time Log - Team Lead Activity Tracker (KQ TL Log)
 
 This is a web-based **Time Logging and User Management System** built using Django. It’s designed to help **team leads track task submissions, view team reports**, and manage users effectively. It includes features like dashboard analytics, role-based access, grid views, and dynamic UI components.
 
